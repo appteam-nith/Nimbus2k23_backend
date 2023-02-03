@@ -1,16 +1,12 @@
 import express from 'express';
-import { getMembers,getTeams,postMembers,postTeams } from '../controller/get.js';
-import { getUsers,postUsers,patchUser, deleteUser, getUserById } from '../controller/User-controller.js';
+import { getUsers,postUsers,patchUser, deleteUser, getUserById } from '../controllers/User-controller.js';
 
-const router =express.Router(); 
+const router = express.Router(); 
 
-router.get("/teams",getTeams);
-router.get("/members",getMembers);
+
 router.get("/users",getUsers);
 router.get("/users/:id",getUserById);
 
-router.post("/teams",postTeams);
-router.post("/members",postMembers);
 router.post("/users",postUsers);
 
 router.patch("/users/:id",patchUser);
