@@ -1,6 +1,8 @@
 import express from 'express';
 import { getUsers,postUsers,patchUser, deleteUser,getUsersByName,getUserById} from '../controllers/User-controller.js';
 import { getPost,createPost,updatePost,deletePost,likePost } from '../controllers/post.js';
+import * as controller from '../controllers/controller.js'
+
 
 const router =express.Router(); 
 
@@ -17,5 +19,15 @@ router.get("/posts",getPost);
 router.patch("/posts/:id",updatePost);
 router.delete("posts/:id",deletePost);
 router.patch("/posts/:id/like",likePost);
+
+router.route('/questions')
+.get(controller.getQuestions)  //get request
+.post(controller.insertQuestions) //post request
+.delete(controller.deleteQuestions) //delete request
+
+router.route('/result')
+   .get(controller.getResult)
+   .post(controller.postResult)
+   .delete(controller.deleteResult)
 
 export default router;
