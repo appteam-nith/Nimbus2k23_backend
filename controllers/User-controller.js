@@ -1,18 +1,21 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
-import { User } from "../models/Users.js";
+import { User } from "../models/users.js";
+
 
 export const getUsers = async(req,res)=>{
     try {
         const result = await User.find()
+        const totalCount = await User.estimatedDocumentCount();
         console.log(result);
         res.status(200).json({
             success: "true",
+            totalCount: totalCount,
             body: result
         })
     } catch (e) {
         res.status(500).json({
-            message: "Something went wrong!"
+            message: "Something went wrong!" 
         })
     }
 }
@@ -24,26 +27,30 @@ export const getUsersByName = async(req,res)=>{
         const result = await User.find({
                "userName": {$regex: key,$options: "i"}
         });
+        const resultCount = Object.keys(result).length;
         console.log(result);
-        res.status(201).json({
+        res.status(200).json({
             message: "found",
+            result: resultCount,
             body: result
         })       
     } catch (e) {
         res.status(500).json({
-            message: "Something is wrong!"
+            status: "failed",
+            error: e.message
         })
-        console.log(e);
+        console.log(e.message);
     }
 }
 
-export const getUserById = async(req,res)=>{
-    const id = req.params.id;
+export const getUserByFirebaseId = async(req,res)=>{
+    const firebaseid = req.params.firebaseid;
+    console.log(firebaseid);
     try {
-        const result = await User.findById(id);
+        const result = await User.find({firebaseId: firebaseid}).exec();
         if(!result){
-            return res.status(401).json({
-                message: "User does not exist exists"
+            return res.status(404).json({
+                message: "User does not exists"
             })
         }
         console.log(result);
@@ -53,7 +60,33 @@ export const getUserById = async(req,res)=>{
         })
     } catch (e) {
         res.status(500).json({
-            message: "Something went wrong!"
+            status: "failed",
+            error: e.message
+        })
+    }
+}
+
+export const checkIfUserExist = async( req, res) => {
+    const email = req.params.email;
+    try {
+        const result = await User.findOne({email: email});
+        if(result){
+            res.status(200).json({
+                success: 'true',
+                userFound: 'true',
+                user: result
+            })
+        }else{
+            res.status(200).json({
+                success: "true",
+                userFound: "false"
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            success: 'failed',
+            message: "something went wrong",
+            error: err.message
         })
     }
 }
@@ -68,7 +101,9 @@ export const postUsers = async(req,res)=>{
         password,
         phoneNumber,
         instaId,
-        profileImage
+        profileImage,
+        linkedIn,
+        github
     } = req.body;
     try {
         const result = await User.findOne({email: email});
@@ -87,7 +122,9 @@ export const postUsers = async(req,res)=>{
             password: hashedPassword,
             instaId: instaId,
             profileImage: profileImage,
-            phoneNumber: phoneNumber
+            phoneNumber: phoneNumber,
+            linkedIn: linkedIn,
+            github: github
         })
         console.log(newUser);
         res.status(201).json({
@@ -96,8 +133,10 @@ export const postUsers = async(req,res)=>{
         })
         
     } catch (e) {
-        console.log(e);
-        res.status(500).json({message: "Something went wrong!"})        
+        res.status(500).json({
+            status: "failed",
+            error: e.message
+        })        
     }    
 }
 
@@ -109,12 +148,15 @@ export const patchUser = async(req,res)=>{
         if(!userFound){
             return res.status(400).json({message: "User not found"})
         }
-        res.status(201).json({
+        res.status(202).json({
             modified:"true",
             body: userFound
         })
     } catch (e) {
-        res.status(500).json({message: "Something went wrong!"})
+        res.status(500).json({
+            status: "failed",
+            error: e.message
+        })
     }
     const userFound = await User.findByIdAndUpdate(id,details);
     
@@ -127,13 +169,14 @@ export const deleteUser = async (req,res) => {
         if(!result){
             return res.status(400).json({message: "User not found"})
         }
-        res.status(200).json({
+        res.status(202).json({
             success: "true",
             deleted: result
         })
     } catch (e) {
-        res.status(401).json({
-            message: "Somthing went wrong"
+        res.status(501).json({
+            status: "failed",
+            error: e.message
         })
     }
 }
