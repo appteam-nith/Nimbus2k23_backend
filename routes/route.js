@@ -13,8 +13,32 @@ const router =express.Router();
 //users
 router.get("/users/:firebaseid",getUserByFirebaseId);
 router.get("/users/search/:key",getUsersByName);
+
+
+/**
+ * @swagger
+ * /users:
+ *  post:
+ *     summary: Retrieve a list of JSONPlaceholder users.
+ *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 firebaseId:
+ *                   type: string
+ *                 fullName:
+ *                     type: string
+ *                     
+ */
+
 router.get('/users',getUsers);
 router.get('/users/exist/:email',checkIfUserExist);
+
 router.post("/users",postUsers);
 router.patch("/users/:id",patchUser);
 router.delete("/users/:id",deleteUser);
