@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 import { User } from "../models/users.js";
 
+// //working..
+// /**
+//  * @swagger
+//  * /users:
+//  *  get:
+//  *      summary: Retrieve the list of all users
+//  *     
+// */
 
 export const getUsers = async(req,res)=>{
     try {
