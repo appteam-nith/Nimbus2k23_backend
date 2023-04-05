@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
   user1Id: {
@@ -7,11 +7,15 @@ const roomSchema = new mongoose.Schema({
   },
   user2Id: {
     type: String,
+    default: null
   },
-  status: { //true = room empty , false = room filled by one or two users
+  status: {
     type: String,
-    enum: ['filled','oneUser']
+    enum: ['filled', 'oneUser'],
+    default: 'oneUser'
   }
-},{timestamps: true});
+}, { timestamps: true });
 
-export const Room = mongoose.model('Room',roomSchema);
+const Room = mongoose.model('Room', roomSchema);
+
+module.exports = Room;
