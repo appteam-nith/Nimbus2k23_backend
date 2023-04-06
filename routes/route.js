@@ -8,7 +8,7 @@ import * as controller from '../controllers/quizController.js'
 import { getRoomByRoomId, getRooms,joinRoom, leaveRoom} from '../controllers/omegle.js';
 
 
-const router =express.Router(); 
+const router =express.Router();
 
 //users
 router.get("/users/:firebaseid",getUserByFirebaseId);

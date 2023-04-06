@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 //  import { max,min } from 'mongoose-validator';
 
 
- const QuestionModel = new Schema({
+ const QuestionSchema = new Schema({
     id: {
         type: Number,
         required: true
@@ -27,4 +27,4 @@ const { Schema } = mongoose;
       }
  });
 
-export default mongoose.model('Question', QuestionModel);
+export default mongoose.model('Question', QuestionSchema);
